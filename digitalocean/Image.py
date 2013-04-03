@@ -21,6 +21,6 @@ class Image(object):
 
     def destroy(self):
         """
-            Restore the droplet to an image ( snapshot or backup )
+            Destroy the image
         """
         self.__call_api("/destroy/")
