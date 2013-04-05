@@ -122,7 +122,7 @@ class Droplet(object):
         """
         self.__call_api("/destroy/")
 
-    def create(self):
+    def create(self, ssh_key_ids=None):
         """
             Create the droplet with object properties.
         """
@@ -132,6 +132,8 @@ class Droplet(object):
                 "image_id": self.image_id,
                 "region_id": self.region_id
             }
+        if ssh_key_ids:
+            data["ssh_key_ids"] = ",".join(ssh_key_ids)
         data = self.__call_api("new", data)
         if data:
             self.id = data['droplet']['id']
