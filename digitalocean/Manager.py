@@ -115,3 +115,7 @@ class Manager(object):
             image.api_key = self.api_key
             images.append(image)
         return images
+
+    def get_all_ssh_keys(self):
+        data = self.__call_api("/ssh_keys/")
+        return data["ssh_keys"]
