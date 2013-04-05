@@ -133,7 +133,7 @@ class Droplet(object):
                 "region_id": self.region_id
             }
         if ssh_key_ids:
-            data["ssh_key_ids"] = ",".join(ssh_key_ids)
+            data["ssh_key_ids"] = ",".join((str(id) for id in ssh_key_ids))
         data = self.__call_api("new", data)
         if data:
             self.id = data['droplet']['id']
