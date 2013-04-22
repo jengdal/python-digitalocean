@@ -1,4 +1,6 @@
 import requests
+from digitalocean.Droplet import DOException
+
 
 class Image(object):
     def __init__(self, client_id="", api_key=""):
@@ -16,7 +18,7 @@ class Image(object):
         r = requests.get("https://api.digitalocean.com/images/%s%s" % (self.id, path), params=payload)
         data = r.json()
         if data['status'] != "OK":
-            return None # Raise?
+            raise DOException("%s\n%s" % (data["status"], data))
         return data
 
     def destroy(self):

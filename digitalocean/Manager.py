@@ -1,5 +1,5 @@
 import requests
-from digitalocean.Droplet import Droplet
+from digitalocean.Droplet import Droplet, DOException
 from digitalocean.Region import Region
 from digitalocean.Size import Size
 from digitalocean.Image import Image
@@ -15,7 +15,7 @@ class Manager(object):
         r = requests.get("https://api.digitalocean.com/%s" % path, params=payload)
         data = r.json()
         if data['status'] != "OK":
-            return None # Raise?
+            raise DOException("%s\n%s" % (data["status"], data))
         return data
 
     def get_all_regions(self):

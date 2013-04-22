@@ -1,4 +1,6 @@
 import requests
+from digitalocean.Droplet import DOException
+
 
 class Event(object):
     def __init__(self, event_id=""):
@@ -16,7 +18,7 @@ class Event(object):
         r = requests.get("https://api.digitalocean.com/events/%s%s" % ( self.id, path ), params=payload)
         data = r.json()
         if data['status'] != "OK":
-            return None # Raise?
+            raise DOException("%s\n%s" % (data["status"], data))
         return data
 
     def load(self):
@@ -28,4 +30,3 @@ class Event(object):
             self.percentage = event[u'percentage']
             self.droplet_id = event[u'droplet_id']
             self.action_status = event[u'action_status']
-        

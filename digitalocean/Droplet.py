@@ -1,6 +1,9 @@
 import requests
 from Event import Event
 
+class DOException(Exception):
+    pass
+
 class Droplet(object):
     def __init__(self, droplet_id="", client_id="", api_key=""):
         self.id = droplet_id
@@ -22,7 +25,7 @@ class Droplet(object):
         r = requests.get("https://api.digitalocean.com/droplets/%s%s" % ( self.id, path ), params=payload)
         data = r.json()
         if data['status'] != "OK":
-            return None # Raise?
+            raise DOException("%s\n%s" % (data["status"], data))
         #add the event to the object's event list.
         event_id = data.get(u'event_id',None)
         if not event_id and u'event_id' in data.get(u'droplet',{}):
