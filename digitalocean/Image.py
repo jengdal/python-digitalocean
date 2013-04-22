@@ -1,6 +1,4 @@
 import requests
-from digitalocean.Droplet import DOException
-
 
 class Image(object):
     def __init__(self, client_id="", api_key=""):
@@ -12,6 +10,7 @@ class Image(object):
         self.distribution = None
 
     def __call_api(self, path, params=None):
+        from Droplet import DOException
         payload = {'client_id': self.client_id, 'api_key': self.api_key}
         if params:
             payload.update(params)

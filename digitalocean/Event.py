@@ -1,5 +1,4 @@
 import requests
-from digitalocean.Droplet import DOException
 
 
 class Event(object):
@@ -13,6 +12,7 @@ class Event(object):
         self.action_status = None
         
     def __call_api(self, path, params=dict()):
+        from Droplet import DOException
         payload = {'client_id': self.client_id, 'api_key': self.api_key}
         payload.update(params)
         r = requests.get("https://api.digitalocean.com/events/%s%s" % ( self.id, path ), params=payload)
