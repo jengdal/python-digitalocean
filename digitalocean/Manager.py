@@ -1,4 +1,7 @@
+
+from requests.exceptions import ConnectionError
 import requests
+import time
 from digitalocean.Droplet import Droplet, DOException
 from digitalocean.Region import Region
 from digitalocean.Size import Size
@@ -12,8 +15,19 @@ class Manager(object):
     def __call_api(self, path, params=dict()):
         payload = {'client_id': self.client_id, 'api_key': self.api_key}
         payload.update(params)
-        r = requests.get("https://api.digitalocean.com/%s" % path, params=payload)
-        data = r.json()
+        max_tries = 10
+        while max_tries:
+            try:
+                r = requests.get("https://api.digitalocean.com/%s" % path, params=payload)
+                data = r.json()
+            except ConnectionError, ValueError:
+                max_tries -= 1
+                if not max_tries:
+                    raise
+                time.sleep(60)
+            else:
+                break
+
         if data['status'] != "OK":
             raise DOException("%s\n%s" % (data["status"], data))
         return data

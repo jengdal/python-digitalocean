@@ -1,4 +1,6 @@
 import requests
+import time
+from requests.exceptions import ConnectionError
 from Event import Event
 
 class DOException(Exception):
@@ -22,8 +24,18 @@ class Droplet(object):
     def __call_api(self, path, params=dict()):
         payload = {'client_id': self.client_id, 'api_key': self.api_key}
         payload.update(params)
-        r = requests.get("https://api.digitalocean.com/droplets/%s%s" % ( self.id, path ), params=payload)
-        data = r.json()
+        max_tries = 10
+        while max_tries:
+            try:
+                r = requests.get("https://api.digitalocean.com/droplets/%s%s" % ( self.id, path ), params=payload)
+                data = r.json()
+            except ConnectionError, ValueError:
+                max_tries -= 1
+                if not max_tries:
+                    raise
+                time.sleep(60)
+            else:
+                break
         if data['status'] != "OK":
             raise DOException("%s\n%s" % (data["status"], data))
         #add the event to the object's event list.

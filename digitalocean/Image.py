@@ -1,4 +1,8 @@
+
+from requests.exceptions import ConnectionError
 import requests
+import time
+
 
 class Image(object):
     def __init__(self, client_id="", api_key=""):
@@ -14,8 +18,19 @@ class Image(object):
         payload = {'client_id': self.client_id, 'api_key': self.api_key}
         if params:
             payload.update(params)
-        r = requests.get("https://api.digitalocean.com/images/%s%s" % (self.id, path), params=payload)
-        data = r.json()
+        max_tries = 10
+        while max_tries:
+            try:
+                r = requests.get("https://api.digitalocean.com/images/%s%s" % (self.id, path), params=payload)
+                data = r.json()
+            except ConnectionError, ValueError:
+                max_tries -= 1
+                if not max_tries:
+                    raise
+                time.sleep(60)
+            else:
+                break
+
         if data['status'] != "OK":
             raise DOException("%s\n%s" % (data["status"], data))
         return data
