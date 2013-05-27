@@ -29,7 +29,7 @@ class Image(object):
                     raise
                 time.sleep(60)
             else:
-                raise
+                break
 
         if data['status'] != "OK":
             raise DOException("%s\n%s" % (data["status"], data))
