@@ -35,7 +35,7 @@ class Droplet(object):
                     raise
                 time.sleep(60)
             else:
-                break
+                raise
         if data['status'] != "OK":
             raise DOException("%s\n%s" % (data["status"], data))
         #add the event to the object's event list.
