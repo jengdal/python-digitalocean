@@ -20,7 +20,7 @@ class Manager(object):
             try:
                 r = requests.get("https://api.digitalocean.com/%s" % path, params=payload)
                 data = r.json()
-            except ConnectionError, ValueError:
+            except (ConnectionError, ValueError):
                 max_tries -= 1
                 if not max_tries:
                     raise

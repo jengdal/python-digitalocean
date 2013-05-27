@@ -23,7 +23,7 @@ class Image(object):
             try:
                 r = requests.get("https://api.digitalocean.com/images/%s%s" % (self.id, path), params=payload)
                 data = r.json()
-            except ConnectionError, ValueError:
+            except (ConnectionError, ValueError):
                 max_tries -= 1
                 if not max_tries:
                     raise
