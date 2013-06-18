@@ -40,3 +40,9 @@ class Image(object):
             Destroy the image
         """
         self.__call_api("/destroy/")
+
+    def transfer(self, region_id):
+        """
+            Transfer the image
+        """
+        self.__call_api("/transfer/", {"region_id": region_id})
